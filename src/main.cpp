@@ -56,6 +56,8 @@ bool SER0 = false;
 
 char buf[1] = {0};
 
+bool limit = 0;
+
 void SERhan(char ny)
 {
    if (ny == SER0_KEY)
@@ -239,27 +241,24 @@ int main()
 
    while (1)
    {
-      if (!limit1 || !limit2 || !limit3 || !limit4)
-      {
-         SWICH = false;
-         FW = false;
-         BW = false;
-         FR = false;
-         FL = false;
-         BR = false;
-         BL = false;
-         BY_FW = false;
-         BY_BW = false;
-         SL_ARM = false;
-         SL_ON = false;
-         SWICH = false;
-         led = !led;
-      }
+      // if (limit == 0)
+      // {
+      //    if (!limit1)
+      //    {
+      //       BY_FW = false;
+      //       BY_BW = false;
+      //       limit = 1;
+      //    }
+      // }
+      // else if (limit1)
+      // {
+      //    limit = 0;
+      // }
 
       int16_t pwm[4] = {0, 0, 0, 0};
       std::array<uint8_t, 8> SER = {0, 0, 0, 0, 0, 0, 0, 0};
       std::array<uint8_t, 8> servo;
-      std::fill(servo.begin(), servo.end(), 0);
+      std::fill(servo.begin(), servo.end(), 120);
 
       if (uart4.readable())
       {
@@ -271,7 +270,6 @@ int main()
 
          if (ny == 'd')
          {
-            printf("www");
             SWICH = true;
          }
          else if (ny == 'u')
@@ -312,19 +310,19 @@ int main()
       }
       else if (FR)
       {
-         pwm[0] = POWER;
+         pwm[1] = -POWER;
       }
       else if (FL)
       {
-         pwm[1] = POWER;
+         pwm[0] = POWER;
       }
       else if (BR)
       {
-         pwm[0] = -POWER;
+         pwm[1] = POWER;
       }
       else if (BL)
       {
-         pwm[1] = -POWER;
+         pwm[0] = -POWER;
       }
       if (BY_FW)
       {
@@ -337,13 +335,13 @@ int main()
       if (SER0)
          std::fill(servo.begin(), servo.end(), 0);
       if (SER90)
-         std::fill(servo.begin(), servo.end(), 127);
+         std::fill(servo.begin(), servo.end(), 30);
       if (SER135)
-         std::fill(servo.begin(), servo.end(), 184);
+         std::fill(servo.begin(), servo.end(), 60);
       if (SER150)
-         std::fill(servo.begin(), servo.end(), 212);
+         std::fill(servo.begin(), servo.end(), 90);
       if (SER180)
-         std::fill(servo.begin(), servo.end(), 225);
+         std::fill(servo.begin(), servo.end(), 120);
       if (SL_ON)
       {
          std::fill(SER.begin(), SER.end(), 255);
