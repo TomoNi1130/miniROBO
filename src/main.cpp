@@ -103,8 +103,6 @@ void SERhan(char ny)
       SER90 = false;
       SERtheta = false;
    }
-
-   // SERtheta = false;
 }
 
 void hantei(char ny)
@@ -237,28 +235,26 @@ int main()
    uart4.set_baud(9600);
    serial_port.set_baud(115200);
 
-   // char setup[] = "setup";
-   // serial_port.write(setup, sizeof(setup));
    printf("setup\n");
 
    while (1)
    {
-      // if (!limit1 || !limit2 || !limit3 || !limit4)
-      // {
-      //    SWICH = false;
-      //    FW = false;
-      //    BW = false;
-      //    FR = false;
-      //    FL = false;
-      //    BR = false;
-      //    BL = false;
-      //    BY_FW = false;
-      //    BY_BW = false;
-      //    SL_ARM = false;
-      //    SL_ON = false;
-      //    SWICH = false;
-      //    led = !led;
-      // }
+      if (!limit1 || !limit2 || !limit3 || !limit4)
+      {
+         SWICH = false;
+         FW = false;
+         BW = false;
+         FR = false;
+         FL = false;
+         BR = false;
+         BL = false;
+         BY_FW = false;
+         BY_BW = false;
+         SL_ARM = false;
+         SL_ON = false;
+         SWICH = false;
+         led = !led;
+      }
 
       int16_t pwm[4] = {0, 0, 0, 0};
       std::array<uint8_t, 8> SER = {0, 0, 0, 0, 0, 0, 0, 0};
