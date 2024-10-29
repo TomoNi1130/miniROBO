@@ -241,19 +241,6 @@ int main()
 
    while (1)
    {
-      // if (limit == 0)
-      // {
-      //    if (!limit1)
-      //    {
-      //       BY_FW = false;
-      //       BY_BW = false;
-      //       limit = 1;
-      //    }
-      // }
-      // else if (limit1)
-      // {
-      //    limit = 0;
-      // }
 
       int16_t pwm[4] = {0, 0, 0, 0};
       std::array<uint8_t, 8> SER = {0, 0, 0, 0, 0, 0, 0, 0};
