@@ -258,7 +258,7 @@ int main()
       int16_t pwm[4] = {0, 0, 0, 0};
       std::array<uint8_t, 8> SER = {0, 0, 0, 0, 0, 0, 0, 0};
       std::array<uint8_t, 8> servo;
-      std::fill(servo.begin(), servo.end(), 120);
+      std::fill(servo.begin(), servo.end(), 0);
 
       if (uart4.readable())
       {
@@ -335,13 +335,13 @@ int main()
       if (SER0)
          std::fill(servo.begin(), servo.end(), 0);
       if (SER90)
-         std::fill(servo.begin(), servo.end(), 30);
+         std::fill(servo.begin(), servo.end(), 127);
       if (SER135)
-         std::fill(servo.begin(), servo.end(), 60);
+         std::fill(servo.begin(), servo.end(), 191);
       if (SER150)
-         std::fill(servo.begin(), servo.end(), 90);
+         std::fill(servo.begin(), servo.end(), 212);
       if (SER180)
-         std::fill(servo.begin(), servo.end(), 120);
+         std::fill(servo.begin(), servo.end(), 235);
       if (SL_ON)
       {
          std::fill(SER.begin(), SER.end(), 255);
