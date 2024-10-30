@@ -22,11 +22,13 @@
 #define SL_ARM_KEY '.'
 #define SL_ON_KEY '+'
 
-#define SER0_KEY '1'
-#define SER90_KEY '2'
-#define SER180_KEY '5'
-#define SER135_KEY '3'
-#define SER150_KEY '4'
+#define SERB_KEY '6'
+#define SERW_KEY '9'
+#define SER180_KEY '1'
+#define SER0_KEY '2'
+#define SER90_KEY '3'
+#define SER45_KEY '4'
+#define SER135_KEY '5'
 
 DigitalIn button{BUTTON1};
 DigitalOut led{LED1};
@@ -48,62 +50,98 @@ bool SL_ON = false;
 bool SWICH = false;
 bool SERtheta = false;
 
-bool SER90 = false;
+bool SERW = false;
 bool SER180 = false;
-bool SER135 = false;
-bool SER150 = false;
 bool SER0 = false;
+bool SER90 = false;
+bool SERB = false;
+bool SER45 = false;
+bool SER135 = false;
 
 char buf[1] = {0};
 
 bool limit = 0;
 
+int theta = 0;
+
 void SERhan(char ny)
 {
-   if (ny == SER0_KEY)
+   if (ny == SERB_KEY)
    {
-      SER0 = true;
+      SERB = true;
       SER180 = false;
-      SER135 = false;
-      SER150 = false;
+      SER0 = false;
       SER90 = false;
+      SERW = false;
       SERtheta = false;
+      SER45 = false;
+      SER135 = false;
+   }
+   else if (ny == SERW_KEY)
+   {
+      SERB = false;
+      SER180 = false;
+      SER0 = false;
+      SER90 = false;
+      SERW = true;
+      SERtheta = false;
+      SER45 = false;
+      SER135 = false;
+   }
+   else if (ny == SER0_KEY)
+   {
+      SERB = false;
+      SER180 = false;
+      SER0 = true;
+      SER90 = false;
+      SERW = false;
+      SERtheta = false;
+      SER45 = false;
+      SER135 = false;
    }
    else if (ny == SER90_KEY)
    {
-      SER0 = false;
+      SERB = false;
       SER180 = false;
-      SER135 = false;
-      SER150 = false;
+      SER0 = false;
       SER90 = true;
+      SERW = false;
       SERtheta = false;
-   }
-   else if (ny == SER135_KEY)
-   {
-      SER0 = false;
-      SER180 = false;
-      SER135 = true;
-      SER150 = false;
-      SER90 = false;
-      SERtheta = false;
-   }
-   else if (ny == SER150_KEY)
-   {
-      SER0 = false;
-      SER180 = false;
+      SER45 = true;
       SER135 = false;
-      SER150 = true;
-      SER90 = false;
-      SERtheta = false;
    }
    else if (ny == SER180_KEY)
    {
-      SER0 = false;
+      SERB = false;
       SER180 = true;
-      SER135 = false;
-      SER150 = false;
+      SER0 = false;
       SER90 = false;
+      SERW = false;
       SERtheta = false;
+      SER45 = true;
+      SER135 = false;
+   }
+   if (ny == SER45_KEY)
+   {
+      SERB = false;
+      SER180 = false;
+      SER0 = false;
+      SER90 = false;
+      SERW = false;
+      SERtheta = false;
+      SER45 = true;
+      SER135 = false;
+   }
+   if (ny == SER135_KEY)
+   {
+      SERB = false;
+      SER180 = false;
+      SER0 = false;
+      SER90 = false;
+      SERW = false;
+      SERtheta = false;
+      SER45 = false;
+      SER135 = true;
    }
 }
 
@@ -221,10 +259,10 @@ void hantei(char ny)
    }
 }
 
-DigitalIn limit1(PB_4);
-DigitalIn limit2(PB_5);
-DigitalIn limit3(PB_3);
-DigitalIn limit4(PB_10);
+// DigitalIn limit1(PB_4);
+// DigitalIn limit2(PB_5);
+// DigitalIn limit3(PB_3);
+// DigitalIn limit4(PB_10);
 
 int main()
 {
@@ -270,6 +308,8 @@ int main()
             BL = false;
             BY_FW = false;
             BY_BW = false;
+            SERB = false;
+            SERW = false;
          }
          if (ny == '.')
          {
@@ -287,48 +327,61 @@ int main()
 
       if (FW)
       {
-         pwm[0] = POWER;
          pwm[1] = -POWER;
+         pwm[2] = POWER;
       }
       else if (BW)
       {
-         pwm[0] = -POWER;
          pwm[1] = POWER;
+         pwm[2] = -POWER;
       }
       else if (FR)
       {
-         pwm[1] = -POWER;
+         pwm[2] = POWER;
       }
       else if (FL)
       {
-         pwm[0] = POWER;
+         pwm[1] = -POWER;
       }
       else if (BR)
       {
-         pwm[1] = POWER;
+         pwm[2] = -POWER;
       }
       else if (BL)
       {
-         pwm[0] = -POWER;
+         pwm[1] = POWER;
       }
       if (BY_FW)
       {
-         pwm[2] = BY_FW_POWER;
+         pwm[3] = -BY_FW_POWER;
       }
       else if (BY_BW)
       {
-         pwm[2] = -BY_BW_POWER;
+         pwm[3] = BY_BW_POWER;
+      }
+      if (SERB)
+      {
+         theta += 1;
+         ThisThread::sleep_for(30ms);
+         printf("A");
+      }
+      if (SERW)
+      {
+         theta += -1;
+         ThisThread::sleep_for(30ms);
+         printf("a");
       }
       if (SER0)
-         std::fill(servo.begin(), servo.end(), 0);
+         theta = 0;
+      if (SER45)
+         theta = 63;
       if (SER90)
-         std::fill(servo.begin(), servo.end(), 127);
+         theta = 127;
       if (SER135)
-         std::fill(servo.begin(), servo.end(), 191);
-      if (SER150)
-         std::fill(servo.begin(), servo.end(), 212);
+         theta = 190;
       if (SER180)
-         std::fill(servo.begin(), servo.end(), 235);
+         theta = 235;
+
       if (SL_ON)
       {
          std::fill(SER.begin(), SER.end(), 255);
@@ -343,11 +396,21 @@ int main()
       // for (int i = 0; i < 8; i++)
       // {
       //    sec_SER[0] += sin_SER[i];
-      // }
-      CANMessage msg(4, (const uint8_t *)pwm, 8);
+      //
+
+      CANMessage msg(2, (const uint8_t *)pwm, 8);
       can.write(msg);
       CANMessage SER_msg(28, SER.data(), 8);
       can.write(SER_msg);
+      if (theta < 0)
+      {
+         theta = 0;
+      }
+      else if (theta > 235)
+      {
+         theta = 235;
+      }
+      std::fill(servo.begin(), servo.end(), theta);
       CANMessage servo_msg(141, servo.data(), 8);
       can.write(servo_msg);
    }
