@@ -7,7 +7,7 @@
 #define BY_FW_POWER 20000
 #define BY_BW_POWER 20000
 #define POWER 25000
-#define TEISOKUPOWER 7000
+#define TEISOKUPOWER 10000
 
 // キーたち
 #define UP_KEY 'u'
@@ -22,13 +22,16 @@
 #define LTRR_KEY '3'
 #define LTRL_KEY '2'
 
-#define BY_FW_KEY '1'
-#define BY_BW_KEY '0'
+#define BY_FW_KEY '0'
+#define BY_BW_KEY '1'
 #define SL_ARM_KEY '.'
 #define SL_ON_KEY '+'
 
 #define SERB_KEY '6'
 #define SERW_KEY '9'
+#define SERB_SUB_KEY '5'
+#define SERW_SUB_KEY '8'
+
 #define SER180_KEY '1'
 #define SER0_KEY '3'
 #define SER90_KEY '2'
@@ -374,6 +377,8 @@ int main()
             BY_BW = false;
             SERB = false;
             SERW = false;
+            LTRL = false;
+            LTRR = false;
          }
          if (ny == '.')
          {
@@ -418,13 +423,13 @@ int main()
          }
          else if (LTRR)
          {
-            pwm[1] = -POWER;
-            pwm[2] = -POWER;
+            pwm[1] = POWER;
+            pwm[2] = POWER;
          }
          else if (LTRL)
          {
-            pwm[1] = POWER;
-            pwm[2] = POWER;
+            pwm[1] = -POWER;
+            pwm[2] = -POWER;
          }
       }
       else if (TEISOKU)
@@ -442,19 +447,31 @@ int main()
          }
          else if (FR)
          {
-            pwm[2] = TEISOKUPOWER;
+            pwm[2] = -TEISOKUPOWER;
          }
          else if (FL)
          {
-            pwm[1] = -TEISOKUPOWER;
+            pwm[1] = TEISOKUPOWER;
          }
          else if (BR)
          {
-            pwm[2] = -TEISOKUPOWER;
+
+            pwm[2] = TEISOKUPOWER;
          }
+
          else if (BL)
          {
+            pwm[1] = -TEISOKUPOWER;
+         }
+         else if (LTRR)
+         {
             pwm[1] = TEISOKUPOWER;
+            pwm[2] = TEISOKUPOWER;
+         }
+         else if (LTRL)
+         {
+            pwm[1] = -TEISOKUPOWER;
+            pwm[2] = -TEISOKUPOWER;
          }
       }
       if (BY_FW)
@@ -471,7 +488,7 @@ int main()
          ThisThread::sleep_for(30ms);
          printf("A");
       }
-      if (SERW)
+      else if (SERW)
       {
          theta += -1;
          ThisThread::sleep_for(30ms);
@@ -504,10 +521,8 @@ int main()
       //    sec_SER[0] += sin_SER[i];
       //
 
-      CANMessage msg(2, (const uint8_t *)pwm, 8);
-      can.write(msg);
+      CANMessage msg(4, (const uint8_t *)pwm, 8);
       CANMessage SER_msg(28, SER.data(), 8);
-      can.write(SER_msg);
       if (theta < 0)
       {
          theta = 0;
@@ -519,5 +534,8 @@ int main()
       std::fill(servo.begin(), servo.end(), theta);
       CANMessage servo_msg(141, servo.data(), 8);
       can.write(servo_msg);
+
+      can.write(SER_msg);
+      can.write(msg);
    }
 }
