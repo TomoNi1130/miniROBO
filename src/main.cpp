@@ -6,17 +6,22 @@
 #define MAXIMUM_BUFFER_SIZE 0
 #define BY_FW_POWER 20000
 #define BY_BW_POWER 20000
-#define POWER 20000
+#define POWER 25000
+#define TEISOKUPOWER 7000
 
 // キーたち
 #define UP_KEY 'u'
 #define DOWN_KEY 'o'
+
 #define FW_KEY '8'
 #define BW_KEY '5'
 #define FR_KEY '9'
 #define BR_KEY '6'
 #define FL_KEY '7'
 #define BL_KEY '4'
+#define LTRR_KEY '3'
+#define LTRL_KEY '2'
+
 #define BY_FW_KEY '1'
 #define BY_BW_KEY '0'
 #define SL_ARM_KEY '.'
@@ -25,10 +30,12 @@
 #define SERB_KEY '6'
 #define SERW_KEY '9'
 #define SER180_KEY '1'
-#define SER0_KEY '2'
-#define SER90_KEY '3'
+#define SER0_KEY '3'
+#define SER90_KEY '2'
 #define SER45_KEY '4'
 #define SER135_KEY '5'
+
+#define TEISOKU_KEY '*'
 
 DigitalIn button{BUTTON1};
 DigitalOut led{LED1};
@@ -57,6 +64,10 @@ bool SER90 = false;
 bool SERB = false;
 bool SER45 = false;
 bool SER135 = false;
+bool LTRR = false;
+bool LTRL = false;
+
+bool TEISOKU = false;
 
 char buf[1] = {0};
 
@@ -147,8 +158,36 @@ void SERhan(char ny)
 
 void hantei(char ny)
 {
+   if (ny == LTRR_KEY)
+   {
+      LTRR = true;
+      LTRL = false;
+      FW = false;
+      BW = false;
+      FR = false;
+      FL = false;
+      BR = false;
+      BL = false;
+      BY_FW = false;
+      BY_BW = false;
+   }
+   if (ny == LTRL_KEY)
+   {
+      LTRR = false;
+      LTRL = true;
+      FW = false;
+      BW = false;
+      FR = false;
+      FL = false;
+      BR = false;
+      BL = false;
+      BY_FW = false;
+      BY_BW = false;
+   }
    if (ny == FW_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = true;
       BW = false;
       FR = false;
@@ -160,6 +199,8 @@ void hantei(char ny)
    }
    if (ny == BW_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = true;
       FR = false;
@@ -171,6 +212,8 @@ void hantei(char ny)
    }
    if (ny == FR_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = true;
@@ -182,6 +225,8 @@ void hantei(char ny)
    }
    if (ny == FL_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = false;
@@ -193,6 +238,8 @@ void hantei(char ny)
    }
    if (ny == BR_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = false;
@@ -204,6 +251,8 @@ void hantei(char ny)
    }
    if (ny == BL_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = false;
@@ -215,6 +264,8 @@ void hantei(char ny)
    }
    if (ny == BY_FW_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = false;
@@ -226,6 +277,8 @@ void hantei(char ny)
    }
    if (ny == BY_BW_KEY)
    {
+      LTRL = false;
+      LTRR = false;
       FW = false;
       BW = false;
       FR = false;
@@ -255,6 +308,17 @@ void hantei(char ny)
       else
       {
          SL_ON = true;
+      }
+   }
+   if (ny == TEISOKU_KEY)
+   {
+      if (TEISOKU)
+      {
+         TEISOKU = false;
+      }
+      else
+      {
+         TEISOKU = true;
       }
    }
 }
@@ -324,32 +388,74 @@ int main()
             hantei(ny);
          }
       }
-
-      if (FW)
+      if (TEISOKU == false)
       {
-         pwm[1] = -POWER;
-         pwm[2] = POWER;
+         if (FW)
+         {
+            pwm[1] = -POWER;
+            pwm[2] = POWER;
+         }
+         else if (BW)
+         {
+            pwm[1] = POWER;
+            pwm[2] = -POWER;
+         }
+         else if (FR)
+         {
+            pwm[2] = POWER;
+         }
+         else if (FL)
+         {
+            pwm[1] = -POWER;
+         }
+         else if (BR)
+         {
+            pwm[2] = -POWER;
+         }
+         else if (BL)
+         {
+            pwm[1] = POWER;
+         }
+         else if (LTRR)
+         {
+            pwm[1] = -POWER;
+            pwm[2] = -POWER;
+         }
+         else if (LTRL)
+         {
+            pwm[1] = POWER;
+            pwm[2] = POWER;
+         }
       }
-      else if (BW)
+      else if (TEISOKU)
       {
-         pwm[1] = POWER;
-         pwm[2] = -POWER;
-      }
-      else if (FR)
-      {
-         pwm[2] = POWER;
-      }
-      else if (FL)
-      {
-         pwm[1] = -POWER;
-      }
-      else if (BR)
-      {
-         pwm[2] = -POWER;
-      }
-      else if (BL)
-      {
-         pwm[1] = POWER;
+         pwm[0] = 10000;
+         if (FW)
+         {
+            pwm[1] = -TEISOKUPOWER;
+            pwm[2] = TEISOKUPOWER;
+         }
+         else if (BW)
+         {
+            pwm[1] = TEISOKUPOWER;
+            pwm[2] = -TEISOKUPOWER;
+         }
+         else if (FR)
+         {
+            pwm[2] = TEISOKUPOWER;
+         }
+         else if (FL)
+         {
+            pwm[1] = -TEISOKUPOWER;
+         }
+         else if (BR)
+         {
+            pwm[2] = -TEISOKUPOWER;
+         }
+         else if (BL)
+         {
+            pwm[1] = TEISOKUPOWER;
+         }
       }
       if (BY_FW)
       {
