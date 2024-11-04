@@ -33,9 +33,9 @@
 #define SERW_SUB_KEY '8'
 
 #define SER180_KEY '1'
-#define SER0_KEY '3'
-#define SER90_KEY '2'
-#define SER45_KEY '4'
+#define SER0_KEY '7'
+#define SER90_KEY '4'
+#define SER45_KEY '2'
 #define SER135_KEY '5'
 
 #define TEISOKU_KEY '*'
@@ -397,29 +397,29 @@ int main()
       {
          if (FW)
          {
-            pwm[1] = -POWER;
-            pwm[2] = POWER;
+            pwm[1] = POWER;
+            pwm[2] = -POWER;
          }
          else if (BW)
          {
-            pwm[1] = POWER;
-            pwm[2] = -POWER;
+            pwm[1] = -POWER;
+            pwm[2] = POWER;
          }
          else if (FR)
          {
-            pwm[2] = POWER;
+            pwm[1] = POWER;
          }
          else if (FL)
          {
-            pwm[1] = -POWER;
+            pwm[2] = -POWER;
          }
          else if (BR)
          {
-            pwm[2] = -POWER;
+            pwm[1] = -POWER;
          }
          else if (BL)
          {
-            pwm[1] = POWER;
+            pwm[2] = POWER;
          }
          else if (LTRR)
          {
@@ -437,31 +437,31 @@ int main()
          pwm[0] = 10000;
          if (FW)
          {
-            pwm[1] = -TEISOKUPOWER;
-            pwm[2] = TEISOKUPOWER;
+            pwm[1] = TEISOKUPOWER;
+            pwm[2] = -TEISOKUPOWER;
          }
          else if (BW)
          {
-            pwm[1] = TEISOKUPOWER;
-            pwm[2] = -TEISOKUPOWER;
+            pwm[1] = -TEISOKUPOWER;
+            pwm[2] = TEISOKUPOWER;
          }
          else if (FR)
          {
-            pwm[2] = -TEISOKUPOWER;
+            pwm[1] = TEISOKUPOWER;
          }
          else if (FL)
          {
-            pwm[1] = TEISOKUPOWER;
+            pwm[2] = -TEISOKUPOWER;
          }
          else if (BR)
          {
 
-            pwm[2] = TEISOKUPOWER;
+            pwm[1] = -TEISOKUPOWER;
          }
 
          else if (BL)
          {
-            pwm[1] = -TEISOKUPOWER;
+            pwm[2] = TEISOKUPOWER;
          }
          else if (LTRR)
          {
@@ -476,11 +476,11 @@ int main()
       }
       if (BY_FW)
       {
-         pwm[3] = -BY_FW_POWER;
+         pwm[3] = BY_FW_POWER;
       }
       else if (BY_BW)
       {
-         pwm[3] = BY_BW_POWER;
+         pwm[3] = -BY_BW_POWER;
       }
       if (SERB)
       {
@@ -521,7 +521,7 @@ int main()
       //    sec_SER[0] += sin_SER[i];
       //
 
-      CANMessage msg(4, (const uint8_t *)pwm, 8);
+      CANMessage msg(2, (const uint8_t *)pwm, 8);
       CANMessage SER_msg(28, SER.data(), 8);
       if (theta < 0)
       {
